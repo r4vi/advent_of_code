@@ -95,4 +95,4 @@ def test_input_part1():
 def test_input_part2():
     with open("./input", "r") as i:
         initial = parse_input(i.read())
-        print(world_after_ticks_fast(initial, 256))
+        assert 1653250886439 == world_after_ticks_fast(initial, 256)
