@@ -6,7 +6,7 @@ authors = ["Your Name <you@example.com>"]
 license = "WTFPL"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
 pytest = "^6.2.5"
 
 [tool.poetry.dev-dependencies]
