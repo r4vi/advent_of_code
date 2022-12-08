@@ -19,8 +19,13 @@ sample_part2 = """acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | c
 def parse_input(raw_input) -> List[Tuple[List[frozenset], List[frozenset]]]:
     parsed = raw_input.strip().split("\n")
     parsed = [x.split("|") for x in parsed]
-    parsed = [(list(map(frozenset, l.strip().split(" "))),
-               list(map(frozenset, r.strip().split(" "))),) for l, r in parsed]
+    parsed = [
+        (
+            list(map(frozenset, l.strip().split(" "))),
+            list(map(frozenset, r.strip().split(" "))),
+        )
+        for l, r in parsed
+    ]
     return parsed
 
 
@@ -34,7 +39,7 @@ lookup = [
     frozenset("abdefg"),  # 6
     frozenset("acf"),  # 7, unique, 3
     frozenset("abcdefg"),  # 8, unique, 7
-    frozenset("abcdfg")  # 9
+    frozenset("abcdfg"),  # 9
 ]
 
 signal_to_length = Counter(len(x) for x in lookup)
@@ -55,7 +60,7 @@ def test_sample_part1():
 
 
 def test_input_part1():
-    with open('./input', 'r') as i:
+    with open("./input", "r") as i:
         parsed = parse_input(i.read())
 
         parsed_outputs = [x[1] for x in parsed]
