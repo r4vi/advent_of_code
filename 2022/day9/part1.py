@@ -53,8 +53,7 @@ def calculate(move_txt):
     tail_positions = {tail}
     print_game_state({head}, 6, 6, {tail})
     for move_vec, number_of_moves in moves:
-        print(
-            f"current state: {head=}, {tail=}, moving {move_vec}*{number_of_moves}")
+        print(f"current state: {head=}, {tail=}, moving {move_vec}*{number_of_moves}")
         for i in range(number_of_moves):
             print(f"moving head{head} to")
             head = apply_move(head, move_vec)
