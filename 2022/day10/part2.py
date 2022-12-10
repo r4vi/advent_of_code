@@ -198,41 +198,22 @@ class Noop(Instruction):
         pass
 
 
-def calculate(instructions):
-
-    register_x = 1
-    expanded = []
-
-    for inst in instructions.splitlines():
-
-        match inst.split():
-            case ["noop"]:
-                print("noop")
-                expanded.append(0)
-            case ["addx", x]:
-                x = int(x)
-                print(f"addx {x}")
-                expanded.extend([0, x])
-
-    return expanded
-
-
 def calculate2(instructions):
     inst_q = deque()
     for inst in instructions.splitlines():
         match inst.split():
             case ["noop"]:
-                print("noop")
+                # print("noop")
                 inst_q.append(Noop())
             case ["addx", x]:
                 x = int(x)
-                print(f"addx {x}")
+                # print(f"addx {x}")
                 inst_q.append(AddX(x=x))
     return inst_q
 
 
-def run_clock(program):
-    registers = [1]
+def run_clock(program, registers):
+
     while program:
         curr = program[0]
         curr.apply(registers)
@@ -244,43 +225,60 @@ def run_clock(program):
 
 def main():
 
-    sigpos = list(range(20, 260, 40))
+    sigpos = list(range(40, 260, 40))
 
-    # part 1
+    # part 2
 
     ## sample2
     prog = calculate2(sample2)
-
-    register_generator = run_clock(prog)
-    sig_vals = []
-
+    registers = r = [1]
+    register_generator = run_clock(prog, registers)
+    row = list("." * 40)
     for i in range(sigpos[-1] + 1):
-        if i in sigpos:
-            sig_vals.append(r[0] * i)
-        r = next(register_generator)
 
-    print(f"{sig_vals=}")
-    print(f"{sum(sig_vals)} == 13140")
+        try:
+            r = next(register_generator)
+        except StopIteration:
+            print("".join(row))
+            break
+        sprite_pos = r[0]
+        row_idx = i % 40
+        if row_idx in range(sprite_pos - 1, sprite_pos + 2):
+            # if current pixel is within a sprite
+
+            row[row_idx] = "#"
+
+        if i in sigpos:
+            print("".join(row))
+            row = list("." * 40)
 
     # part 1
     ## input
+    print()
     dir_path = Path(os.path.dirname(os.path.realpath(__file__)))
 
     input_raw = (dir_path / Path("./input")).open("r").read()
-    xs = calculate(input_raw)
-
     prog = calculate2(input_raw)
-
-    register_generator = run_clock(prog)
-    sig_vals = []
-
+    registers = r = [1]
+    register_generator = run_clock(prog, registers)
+    row = list(" " * 40)
     for i in range(sigpos[-1] + 1):
-        if i in sigpos:
-            sig_vals.append(r[0] * i)
-        r = next(register_generator)
 
-    print(f"{sig_vals=}")
-    print(f"{sum(sig_vals)} == ??")
+        try:
+            r = next(register_generator)
+        except StopIteration:
+            print("".join(row))
+            break
+        sprite_pos = r[0]
+        row_idx = i % 40
+        if row_idx in range(sprite_pos - 1, sprite_pos + 2):
+            # if current pixel is within a sprite
+
+            row[row_idx] = "#"
+
+        if i in sigpos:
+            print("".join(row))
+            row = list(" " * 40)
     return 0
 
 
