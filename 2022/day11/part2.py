@@ -80,23 +80,15 @@ def run_game(round):
         for monkey in round:
             print(f"Monkey {monkey['id']}:")
             for item in monkey["items"].copy():
-                # print(f"\tMonkey inspects an item with worry level of {item}")
                 monkey["inspected"] += 1
                 mutated = monkey["mutate"](item)
-                # print(f"\t\tWorry level is {monkey['op']} to {mutated}")
                 new = mutated % mod_common
-                # print(f"\t\tMonkey gets bored with item. Worry level is modded by {mod_common} to {new}.")
                 is_divisible = monkey["test"](new)
-                txt_is_div = "is" if is_divisible else "is not"
-                # print(f"\t\tCurrent worry level {txt_is_div} divisible by {monkey['div_check']}.")
                 destination_monkey = monkey[is_divisible]
                 round[destination_monkey]["items"].append(new)
                 monkey["items"].popleft()
-                # print(f"\t\tItem with worry level {new} is thrown to monkey {destination_monkey}.")
         if n % 1000 == 0:
             pprint(f"Round {n} = " + pformat({m["id"]: m["inspected"] for m in round}))
-        # for monkey in round:
-        # print(f"Monkey {monkey['id']}: {', '.join(map(str, monkey['items']))}")
         print("")
     return {m["id"]: m["inspected"] for m in round}
 
