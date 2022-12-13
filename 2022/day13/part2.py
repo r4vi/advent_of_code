@@ -15,18 +15,20 @@ def batched(iterable, n):
     "Batch data into lists of length n. The last batch may be shorter."
     # batched('ABCDEFG', 3) --> ABC DEF G
     if n < 1:
-        raise ValueError('n must be at least one')
+        raise ValueError("n must be at least one")
     it = iter(iterable)
-    while (batch := list(islice(it, n))):
+    while batch := list(islice(it, n)):
         yield batch
 
 
-TAB = '\t'
+TAB = "\t"
+
 
 class Comparison(Enum):
     LEFT_WINS = -1
     EQ = 0
     RIGHT_WINS = 1
+
 
 def cmp(l, r, num_rec=0) -> Comparison:
     t_l, t_r = type(l), type(r)
@@ -41,9 +43,9 @@ def cmp(l, r, num_rec=0) -> Comparison:
         elif l > r:
             return Comparison.RIGHT_WINS
     elif t_l == int and t_r == list:
-        return cmp([l], r, num_rec=num_rec+1)
+        return cmp([l], r, num_rec=num_rec + 1)
     elif t_l == list and t_r == int:
-        return cmp(l, [r], num_rec=num_rec+1)
+        return cmp(l, [r], num_rec=num_rec + 1)
     elif t_l == t_r == list:
         il = iter(l)
         ir = iter(r)
@@ -65,28 +67,16 @@ def cmp(l, r, num_rec=0) -> Comparison:
             if r_complete and not l_complete:
                 return Comparison.RIGHT_WINS
 
-            n_cmp = cmp(next_l, next_r, num_rec=num_rec+1)
+            n_cmp = cmp(next_l, next_r, num_rec=num_rec + 1)
             if n_cmp != Comparison.EQ:
                 return n_cmp
 
 
-def cmp2(a,b) -> int:
-    return cmp(a,b).value
+def cmp2(a, b) -> int:
+    return cmp(a, b).value
+
 
 def main():
-    # part 1
-    ## sample
-    # right_order_indexes = []
-    # pairs = batched(big, 2)
-    # for idx, pair in enumerate(pairs):
-    #     left, right = pair
-    #     print(f"== Pair {idx + 1}")
-    #     outcome = cmp(left, right)
-    #     if outcome == Comparison.LEFT_WINS:
-    #         right_order_indexes.append(idx + 1)
-    #
-    # print(f"{right_order_indexes=}, sum: {sum(right_order_indexes)}")
-
     # part 2
     ## sample
     decoder = [[[2]], [[6]]]
@@ -96,9 +86,10 @@ def main():
     pprint(s)
     assert s == small2
 
+    # real
     i = big + decoder
     s = sorted(i, key=functools.cmp_to_key(cmp2))
-    s1, s2 = s.index(decoder[0])+1, s.index(decoder[1])+1
+    s1, s2 = s.index(decoder[0]) + 1, s.index(decoder[1]) + 1
     pprint(f"{s1=} * {s2=} ==> {s1*s2}")
 
     return 0
