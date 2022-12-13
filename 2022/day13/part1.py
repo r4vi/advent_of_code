@@ -15,18 +15,20 @@ def batched(iterable, n):
     "Batch data into lists of length n. The last batch may be shorter."
     # batched('ABCDEFG', 3) --> ABC DEF G
     if n < 1:
-        raise ValueError('n must be at least one')
+        raise ValueError("n must be at least one")
     it = iter(iterable)
-    while (batch := list(islice(it, n))):
+    while batch := list(islice(it, n)):
         yield batch
 
 
-TAB = '\t'
+TAB = "\t"
+
 
 class Comparison(Enum):
     LEFT_WINS = -1
     EQ = 0
     RIGHT_WINS = 1
+
 
 def cmp(l, r, num_rec=0) -> Comparison:
     t_l, t_r = type(l), type(r)
@@ -41,9 +43,9 @@ def cmp(l, r, num_rec=0) -> Comparison:
         elif l > r:
             return Comparison.RIGHT_WINS
     elif t_l == int and t_r == list:
-        return cmp([l], r, num_rec=num_rec+1)
+        return cmp([l], r, num_rec=num_rec + 1)
     elif t_l == list and t_r == int:
-        return cmp(l, [r], num_rec=num_rec+1)
+        return cmp(l, [r], num_rec=num_rec + 1)
     elif t_l == t_r == list:
         il = iter(l)
         ir = iter(r)
@@ -65,10 +67,9 @@ def cmp(l, r, num_rec=0) -> Comparison:
             if r_complete and not l_complete:
                 return Comparison.RIGHT_WINS
 
-            n_cmp = cmp(next_l, next_r, num_rec=num_rec+1)
+            n_cmp = cmp(next_l, next_r, num_rec=num_rec + 1)
             if n_cmp != Comparison.EQ:
                 return n_cmp
-
 
 
 def main():
@@ -87,7 +88,6 @@ def main():
 
     # part 2
     ## input
-
 
     return 0
 
