@@ -108,8 +108,7 @@ def calculate(in_):
     adj_map = {}
 
     # precompute all possible moves
-    possible_end: set[tuple[int,int]] = set()
-    end = None
+    possible_end: set[tuple[int, int]] = set()
     for y in range(height):
         for x in range(width):
             current_val = get_xy(grid, x, y)
@@ -117,12 +116,11 @@ def calculate(in_):
                 possible_end.add((x, y))
             if current_val == 26:
                 start = (x, y)
-            current_val_pos = max(current_val, 0)
             moves = get_possible_moves([], (x, y), width, height)
             valid_moves = []
             for possible in moves:
                 move_val = get_xy(grid, possible[0], possible[1])
-                if move_val == current_val_pos or current_val_pos - 1 == move_val:
+                if current_val <= move_val + 1:
                     valid_moves.append(possible)
 
             adj_map[(x, y)] = valid_moves
@@ -134,7 +132,7 @@ def calculate(in_):
     node_distance = defaultdict(lambda: sys.maxsize)
     node_distance[start] = 0
 
-    while not possible_end.issubset(visited):
+    while unvisited:
         current = min(unvisited, key=node_distance.__getitem__)
         for node in adj_map[current]:
             if node not in visited:
@@ -142,7 +140,7 @@ def calculate(in_):
                     node_distance[node] = node_distance[current] + 1
         visited.add(current)
         unvisited.remove(current)
-    
+
     for p_end in possible_end:
         start_dists[p_end] = node_distance[p_end]
     return start_dists
