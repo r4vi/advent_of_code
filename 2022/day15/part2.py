@@ -1,9 +1,10 @@
+import bisect
+import math
 import os
 import re
-from collections import namedtuple, defaultdict
+from collections import defaultdict, namedtuple
 from pathlib import Path
 from typing import Iterable
-import math
 
 sample = """Sensor at x=2, y=18: closest beacon is at x=-2, y=15
 Sensor at x=9, y=16: closest beacon is at x=10, y=16
@@ -74,36 +75,36 @@ def manhattan_distance(p1, p2):
     return abs(p2.x - p1.x) + abs(p2.y - p1.y)
 
 
-all_points = sensor_locs | beacon_locs
-min_x = min(c.x for c in all_points)
-min_y = min(c.y for c in all_points)
-max_x = max(c.x for c in all_points)
-max_y = max(c.y for c in all_points)
-search_space = set()
-
 max_coord = 4000000
 # max_coord = 20
 
-diamond_edges = defaultdict(int)
+rx = 0
+ry = 0
 
-beacon_and_sensor_locs = beacon_locs | sensor_locs
+for target in range(max_coord):
+    segments = []
+    for s, kb in data:
+        dist_kb = manhattan_distance(s, kb)
+        a = dist_kb - abs(target - s.y)
+        if a >= 0:
+            seg = (max(0, s.x - a), min(max_coord, s.x + a))
+            bisect.insort(segments, seg)
+    total = 0
+    s, e = segments[0]
+    for i in range(1, len(segments)):
+        ns, ne = segments[i]
 
-for s, kb in data:
-    dist_b = manhattan_distance(s, kb)
-    print(f"checking {s}")
-    y_start = max(0, s.y - dist_b)
-    y_end = min(s.y + dist_b, max_coord) + 1
+        if ns > e:  # different segment
+            s, e = ns, ne
+            ry = target
+            rx = ns - 1
 
-    for y in range(y_start, y_end):
-        x_start = max(0, s.x - dist_b)
-        x_end = min(s.x + dist_b + 1, max_coord)
-        for x in range(x_start, x_end):
-            dist_p = abs(x - s.x) + abs(y - s.y)
-            if dist_p == dist_b + 1:
-                p = Point(x,y)
-                if p not in beacon_and_sensor_locs:
-                    diamond_edges[p] += 1
+            break
+        else:
+            e = max(e, ne)
+    else:
+        continue
+    break
+print(rx, ry, ry + rx * 4000000)
 
-# print_coord_map(sensor_locs, beacon_locs, no_beacon)
-poss = [k for k,v in diamond_edges.items() if v == max(diamond_edges.values())]
-print((poss[-1].x*4000000) + poss[-1].y)
+# print((poss[-1].x*4000000) + poss[-1].y)

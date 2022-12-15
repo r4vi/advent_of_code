@@ -107,6 +107,6 @@ for s, kb in data:
         if dist_p <= dist_b and p not in beacon_locs:
             no_beacon.add(p)
 
-#print_coord_map(sensor_locs, beacon_locs, no_beacon)
+# print_coord_map(sensor_locs, beacon_locs, no_beacon)
 y10 = [x for x in no_beacon if x.y == 2000000]
 print(len(y10))
