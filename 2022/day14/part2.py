@@ -97,8 +97,10 @@ class Grid:
         while not (self.source in self.sand):
             curr = self.next_coord(curr)
             if curr:
-                if self.is_out_of_bounds(curr):
-                    break
+                if curr[1] >= self.max_y + 2:
+                    self.rocks.add(curr)
+                    curr = self.source
+
             else:
                 # restart from top
                 curr = self.source
@@ -125,7 +127,7 @@ def sample_():
     grid = make_grid(lines)
     moves = grid.run()
 
-    assert moves == 24, f"moves is {moves}"
+    assert moves == 93, f"moves is {moves}"
     return moves
 
 
@@ -141,5 +143,5 @@ def main():
 
 
 if __name__ == "__main__":
-    print(sample_())
+    # print(sample_())
     print(main())
